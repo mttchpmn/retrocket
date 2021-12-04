@@ -5,6 +5,7 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     private Rigidbody _rigidbody;
+    private AudioSource _thrustSound;
     [SerializeField] private float mainThrustFactor = 100f;
     [SerializeField] private float rotationThrustFactor = 50f;
 
@@ -12,6 +13,8 @@ public class Movement : MonoBehaviour
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _thrustSound = GetComponent<AudioSource>();
+        _thrustSound.Stop();
     }
 
     // Update is called once per frame
@@ -20,11 +23,20 @@ public class Movement : MonoBehaviour
         ProcessThrust();
         ProcessRotation();
     }
-    
+
     private void ProcessThrust()
     {
-        if (!Input.GetKey(KeyCode.Space) && !Input.GetKey(KeyCode.UpArrow)) return;
-        
+        if (!Input.GetKey(KeyCode.Space) && !Input.GetKey(KeyCode.UpArrow))
+        {
+            _thrustSound.Stop();
+            return;
+        }
+
+        if (!_thrustSound.isPlaying)
+        {
+            _thrustSound.Play();
+        }
+
         Debug.Log("Space pressed");
         ApplyThrust(Vector3.up, mainThrustFactor);
     }
@@ -37,7 +49,7 @@ public class Movement : MonoBehaviour
             ApplyRotationThrust(Vector3.forward);
             return;
         }
-        
+
         if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
             Debug.Log("Right pressed");
@@ -58,5 +70,4 @@ public class Movement : MonoBehaviour
         var thrustForce = vector * thrustFactor;
         _rigidbody.AddRelativeForce(thrustForce * Time.deltaTime);
     }
-
 }
