@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    private Rigidbody _rigidbody;
-    private AudioSource _thrustSound;
     [SerializeField] private float mainThrustFactor = 100f;
     [SerializeField] private float rotationThrustFactor = 50f;
+    [SerializeField] private AudioClip mainEngineSound;
 
+    private Rigidbody _rigidbody;
+    private AudioSource _audioSource;
+    
     // Start is called before the first frame update
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _thrustSound = GetComponent<AudioSource>();
-        _thrustSound.Stop();
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.Stop();
     }
 
     // Update is called once per frame
@@ -28,13 +30,13 @@ public class Movement : MonoBehaviour
     {
         if (!Input.GetKey(KeyCode.Space) && !Input.GetKey(KeyCode.UpArrow))
         {
-            _thrustSound.Stop();
+            _audioSource.Stop();
             return;
         }
 
-        if (!_thrustSound.isPlaying)
+        if (!_audioSource.isPlaying)
         {
-            _thrustSound.Play();
+            _audioSource.PlayOneShot(mainEngineSound);
         }
 
         Debug.Log("Space pressed");
