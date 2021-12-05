@@ -236,6 +236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainThrustFactor: 1000
   rotationThrustFactor: 50
+  mainEngineSound: {fileID: 8300000, guid: 5d4b70624534be3469c2a72bd8b8c0db, type: 3}
 --- !u!54 &872449101
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -526,6 +527,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 872449100, guid: 516dbf23c033190448b0d96f46a16e16, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2447763234291578465, guid: 516dbf23c033190448b0d96f46a16e16, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -578,7 +583,8 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 2a009e44bd7b0d44c8f79a3191530a95, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 872449100, guid: 516dbf23c033190448b0d96f46a16e16, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 516dbf23c033190448b0d96f46a16e16, type: 3}
 --- !u!1001 &8638414782818994259
 PrefabInstance:
