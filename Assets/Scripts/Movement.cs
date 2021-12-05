@@ -32,20 +32,30 @@ public class Movement : MonoBehaviour
     private void ProcessThrust()
     {
         if (Input.GetKeyUp(KeyCode.UpArrow))
-        {
-            _audioSource.Stop();
-            mainBoosterParticles.Stop();
-        }
+            StopThrust();
 
         if (Input.GetKey(KeyCode.UpArrow))
-        {
-            PlayMainBoosterSound();
+            StartThrust();
+    }
 
-            if (!mainBoosterParticles.isPlaying)
-                mainBoosterParticles.Play();
+    private void StartThrust()
+    {
+        PlayMainBoosterSound();
+        ShowBoostParticles();
 
-            ApplyThrust(Vector3.up, mainThrustFactor);
-        }
+        ApplyThrust(Vector3.up, mainThrustFactor);
+    }
+
+    private void ShowBoostParticles()
+    {
+        if (!mainBoosterParticles.isPlaying)
+            mainBoosterParticles.Play();
+    }
+
+    private void StopThrust()
+    {
+        _audioSource.Stop();
+        mainBoosterParticles.Stop();
     }
 
     private void PlayMainBoosterSound()
