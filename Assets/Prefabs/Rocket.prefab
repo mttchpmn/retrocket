@@ -487,6 +487,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadDelay: 1
+  forceThreshold: 4
   winSound: {fileID: 8300000, guid: 15737ac0723d3484ca43947fc1fb0bb2, type: 3}
   loseSound: {fileID: 8300000, guid: e96b2f8a445a9fe499b66b744376bf8f, type: 3}
   winParticles: {fileID: 7984246943702692737}

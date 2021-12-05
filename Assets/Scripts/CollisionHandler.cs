@@ -4,9 +4,10 @@ using UnityEngine.SceneManagement;
 public class CollisionHandler : MonoBehaviour
 {
     [SerializeField] int loadDelay = 1;
+    [SerializeField] float forceThreshold = 5;
     [SerializeField] AudioClip winSound;
     [SerializeField] AudioClip loseSound;
-    
+
     [SerializeField] ParticleSystem winParticles;
     [SerializeField] ParticleSystem loseParticles;
 
@@ -33,7 +34,7 @@ public class CollisionHandler : MonoBehaviour
             case "Friendly":
                 break;
             case "Finish":
-                StartSuccessSequence();
+                StartSuccessSequence(collision.impulse.y);
                 break;
             default:
                 StartCrashSequence();
@@ -41,7 +42,21 @@ public class CollisionHandler : MonoBehaviour
         }
     }
 
-    private void StartSuccessSequence()
+    private void StartSuccessSequence(float verticalImpactForce)
+    {
+        Debug.Log($"Impact: {verticalImpactForce}");
+        Debug.Log($"Threshold: {forceThreshold}");
+
+        if (verticalImpactForce > forceThreshold)
+        {
+            StartCrashSequence();
+            return;
+        }
+
+        StartNextLevelSequence();
+    }
+
+    private void StartNextLevelSequence()
     {
         InvokeTransitionSequence(winSound, winParticles, nameof(LoadNextLevel));
     }
