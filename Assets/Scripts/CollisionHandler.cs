@@ -6,6 +6,9 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] int loadDelay = 1;
     [SerializeField] AudioClip winSound;
     [SerializeField] AudioClip loseSound;
+    
+    [SerializeField] ParticleSystem winParticles;
+    [SerializeField] ParticleSystem loseParticles;
 
     private AudioSource _audioSource;
     private int _activeLevelIndex;
@@ -40,12 +43,13 @@ public class CollisionHandler : MonoBehaviour
 
     private void StartSuccessSequence()
     {
-        InvokeTransitionSequence(winSound, nameof(LoadNextLevel));
+        InvokeTransitionSequence(winSound, winParticles, nameof(LoadNextLevel));
     }
 
-    private void InvokeTransitionSequence(AudioClip audioClip, string actionName)
+    private void InvokeTransitionSequence(AudioClip audioClip, ParticleSystem particles, string actionName)
     {
         _isTransitioning = true;
+        particles.Play();
         _audioSource.Stop();
         StopPlayerInteraction();
         PlaySound(audioClip);
@@ -54,7 +58,7 @@ public class CollisionHandler : MonoBehaviour
 
     private void StartCrashSequence()
     {
-        InvokeTransitionSequence(loseSound, nameof(ReloadLevel));
+        InvokeTransitionSequence(loseSound, loseParticles, nameof(ReloadLevel));
     }
 
     private void PlaySound(AudioClip audioClip)
