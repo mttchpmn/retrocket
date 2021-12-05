@@ -6,10 +6,11 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] int loadDelay = 1;
     [SerializeField] AudioClip winSound;
     [SerializeField] AudioClip loseSound;
-    
+
     private AudioSource _audioSource;
     private int _activeLevelIndex;
     private int _nextLevelIndex;
+    private bool _isTransitioning = false;
 
     void Start()
     {
@@ -19,9 +20,11 @@ public class CollisionHandler : MonoBehaviour
             ? 0
             : _activeLevelIndex + 1;
     }
-    
+
     private void OnCollisionEnter(Collision collision)
     {
+        if (_isTransitioning) return;
+
         switch (collision.gameObject.tag)
         {
             case "Friendly":
@@ -37,16 +40,21 @@ public class CollisionHandler : MonoBehaviour
 
     private void StartSuccessSequence()
     {
-        StopPlayerInteraction();
-        PlaySound(winSound);
-        Invoke(nameof(LoadNextLevel), loadDelay);
+        InvokeTransitionSequence(winSound, nameof(LoadNextLevel));
     }
-    
+
+    private void InvokeTransitionSequence(AudioClip audioClip, string actionName)
+    {
+        _isTransitioning = true;
+        _audioSource.Stop();
+        StopPlayerInteraction();
+        PlaySound(audioClip);
+        Invoke(actionName, loadDelay);
+    }
+
     private void StartCrashSequence()
     {
-        StopPlayerInteraction();
-        PlaySound(loseSound);
-        Invoke(nameof(ReloadLevel), loadDelay);
+        InvokeTransitionSequence(loseSound, nameof(ReloadLevel));
     }
 
     private void PlaySound(AudioClip audioClip)
@@ -58,7 +66,7 @@ public class CollisionHandler : MonoBehaviour
     {
         GetComponent<Movement>().enabled = false;
     }
-    
+
     private void LoadNextLevel()
     {
         SceneManager.LoadScene(_nextLevelIndex);
