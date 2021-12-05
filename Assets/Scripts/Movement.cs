@@ -6,9 +6,14 @@ public class Movement : MonoBehaviour
     [SerializeField] private float rotationThrustFactor = 50f;
     [SerializeField] AudioClip mainEngineSound;
 
+    [SerializeField] private ParticleSystem mainBoosterParticles;
+    [SerializeField] private ParticleSystem leftBoosterParticles;
+    [SerializeField] private ParticleSystem rightBoosterParticles;
+
+
     private Rigidbody _rigidbody;
     private AudioSource _audioSource;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,31 +32,49 @@ public class Movement : MonoBehaviour
     private void ProcessThrust()
     {
         if (Input.GetKeyUp(KeyCode.UpArrow))
+        {
             _audioSource.Stop();
-        
-        if (!Input.GetKey(KeyCode.UpArrow))
-            return;
+            mainBoosterParticles.Stop();
+        }
 
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            PlayMainBoosterSound();
+
+            if (!mainBoosterParticles.isPlaying)
+                mainBoosterParticles.Play();
+
+            ApplyThrust(Vector3.up, mainThrustFactor);
+        }
+    }
+
+    private void PlayMainBoosterSound()
+    {
         if (!_audioSource.isPlaying)
         {
             _audioSource.PlayOneShot(mainEngineSound);
         }
-
-        ApplyThrust(Vector3.up, mainThrustFactor);
     }
 
     private void ProcessRotation()
     {
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        HandleRotate(KeyCode.LeftArrow, rightBoosterParticles, Vector3.forward);
+        HandleRotate(KeyCode.RightArrow, leftBoosterParticles, Vector3.back);
+    }
+
+    private void HandleRotate(KeyCode keyCode, ParticleSystem particles, Vector3 vector)
+    {
+        if (Input.GetKeyUp(keyCode))
         {
-            ApplyRotationThrust(Vector3.forward);
-            return;
+            particles.Stop();
         }
 
-        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        if (Input.GetKey(keyCode))
         {
-            ApplyRotationThrust(Vector3.back);
-            return;
+            if (!particles.isPlaying)
+                particles.Play();
+
+            ApplyRotationThrust(vector);
         }
     }
 
